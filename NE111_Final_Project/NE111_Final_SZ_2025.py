@@ -269,9 +269,16 @@ else:
         bin_centers = 0.5*(bins[:-1]+bins[1:])
         pdf_at_bins = np.interp(bin_centers, x, scaled_pdf)
         vertical_distances = np.abs(counts-pdf_at_bins)
-        max_value = max(counts.max(), pdf_at_bins.max(), 1e-8)
+        try:
+            raw_max = max(float(counts.max()),float(pdf_at_bins.max()))
+        except ValueError:
+            raw_max = 0.0
+        max_value = max(raw_max,1e-12)
         normalized_errors = vertical_distances/max_value
-        shape_accuracy = np.mean(normalized_errors)*100 
+        if not np.isfinite(normalized_errors).all():
+            shape_accuracy = float('inf')
+        else:
+            shape_accuracy = np.mean(normalized_errors)*100 
         # Find area of histogram and Stat Fit
         hist_area = np.sum(counts*bin_width)
         #Calculate overlap area
@@ -290,13 +297,19 @@ else:
 
         #Write data
         st.write('Fit Quality:')
-        st.write('- Fit Accuracy Quotient (FAQ): '+str(round(shape_accuracy)))
+        if shape_accuracy != float('inf'):
+            overlap_fraction = max(o_percent/100,1e-12)
+            adjusted_faq = shape_accuracy/overlap_fraction
+            st.write('- Fit Accuracy Quotient (FAQ): '+str(round(adjusted_faq)))
+        else:
+            st.write('- Fit Accuracy Quotient (FAQ): N/A')
         st.caption('> The closer the FAQ of a data set is to 0, the better the fit')
         st.write("- Fitted Curve Covers ~"+str(o_percent)+'% Of Selected Dataset')
         st.divider()
 
 
     
+
 
 
 
