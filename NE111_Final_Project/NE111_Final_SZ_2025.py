@@ -291,12 +291,13 @@ else:
         #Write data
         st.write('Fit Quality:')
         st.write('- Fit Accuracy Quotient (FAQ): '+str(round(shape_accuracy)))
-        st.caption('> The Closer the FAQ of a data set is to 0, the better the fit, (0 indicating a perfect fit)')
+        st.caption('> The closer the FAQ of a data set is to 0, the better the fit')
         st.write("- Fitted Curve Covers ~"+str(o_percent)+'% Of Selected Dataset')
         st.divider()
 
 
     
+
 
 
 
