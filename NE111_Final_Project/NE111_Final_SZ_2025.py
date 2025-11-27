@@ -143,12 +143,13 @@ else:
         scale = fitted_scale if scale is None else scale
         dist = sci.uniform(loc, scale)
         return dist, {'loc':loc, 'scale':scale}
-    def log_normal(x, shape=None, scale=None):
-        fitted_shape, _, fitted_scale = sci.lognorm.fit(x, floc=0) 
-        shape = fitted_shape if shape is None else shape
+    def skew_normal(x, a=None, loc=None, scale=None):
+        fitted_a, fitted_loc, fitted_scale = sci.skewnorm.fit(x, floc=0) 
+        a = fitted_a if a is None else a
+        loc = fitted_loc if loc is None else loc
         scale = fitted_scale if scale is None else scale
-        dist = sci.lognorm(shape, loc=0, scale=scale)
-        return dist, {'shape': shape, 'scale': scale}
+        dist = sci.skewnorm(a, loc=loc, scale=scale)
+        return dist, {'a': a, 'loc': loc, 'scale': scale}
     def laplace(x, loc=None, scale=None):
         fitted_loc, fitted_scale = sci.laplace.fit(x)
         loc = fitted_loc if loc is None else loc
@@ -192,7 +193,7 @@ else:
         return dist, {'loc':loc, 'scale':scale}
     
 #Select Distribution Function
-    distfunc_options_dict = {'Norm':norm,'Exponential':exponential,'Uniform':uniform,'Log-Normal':log_normal,'Laplace':laplace,'Beta':beta,"Student's T":studentT,'Chi_Squared':chi_squared,'Weibull':weibull,'Cauchy':cauchy}
+    distfunc_options_dict = {'Norm':norm,'Exponential':exponential,'Uniform':uniform,'Skew-Normal':skew_normal,'Laplace':laplace,'Beta':beta,"Student's T":studentT,'Chi_Squared':chi_squared,'Weibull':weibull,'Cauchy':cauchy}
     distfunc_options = list(distfunc_options_dict.keys())
     distfunc_selected = st.selectbox('Select Which Distribution You Wish To Apply', options= distfunc_options)
     st.divider()
@@ -301,15 +302,15 @@ else:
             overlap_fraction = max(o_percent/100,1e-12)
             adjusted_faq = shape_accuracy/overlap_fraction
             st.write('- Fit Accuracy Quotient (FAQ): '+str(round(adjusted_faq)))
+            st.caption('> The closer the FAQ of a data set is to 0, the better the fit')
+            st.write("- Fitted Curve Covers ~"+str(o_percent)+'% Of Selected Dataset')
         else:
             st.write('- Fit Accuracy Quotient (FAQ): N/A')
-        st.caption('> The closer the FAQ of a data set is to 0, the better the fit')
-        st.write("- Fitted Curve Covers ~"+str(o_percent)+'% Of Selected Dataset')
+            st.write('- Overlap N/A')
         st.divider()
 
 
     
-
 
 
 
