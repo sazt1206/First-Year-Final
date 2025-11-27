@@ -30,7 +30,7 @@ if show_manual_input:
     st.header('Manual Input')
     #manual input UI --> CSV memory file
     col_name = st.text_input('Enter the column title:')
-    values_input = st.text_area("Enter numeric values seperated by commas:")
+    values_input = st.text_area("Enter numeric values seperated by commas (All values must be under 1e6):")
     if st.button("Add Column"):
         if col_name and values_input:
             values = [v.strip() for v in values_input.split(',')]
@@ -224,7 +224,11 @@ else:
         #fit dist and get parameter
         bin_width = bins[1]-bins[0]
         dist_func = distfunc_options_dict[distfunc_selected]
-        dist_obj, params = dist_func(arr)
+        try:
+            sample = arr if len(arr) <= 1000000 else np.random.choice(arr, 1_000_000, replace = False)
+            dist_obj, params = dist_func(sample)
+        except (MemoryError, ValueError, sci._continous_distns.FitDataError) as e:
+            continue
         #safe streamlit slide option w/ min and max val buffers
         slider_params={}
         for param_name, val in params.items():
