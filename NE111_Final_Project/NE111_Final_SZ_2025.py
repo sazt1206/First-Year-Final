@@ -306,7 +306,7 @@ else:
             overlap_fraction = max(o_percent/100,1e-12)
             adjusted_faq = shape_accuracy/overlap_fraction
             st.write('- Fit Accuracy Quotient (FAQ): '+str(round(adjusted_faq)))
-            st.caption('> The closer the FAQ of a data set is to 0, the closer the shape of the distribution curve is to the histogram')
+            st.caption('> The closer the FAQ of a data set is to 0, the closer the shape of the statistical distribution curve is to the histogram')
             st.write("- Fitted Curve Covers ~"+str(o_percent)+'% Of Selected Dataset')
         else:
             st.write('- Fit Accuracy Quotient (FAQ): N/A')
@@ -315,6 +315,7 @@ else:
 
 
     
+
 
 
 
